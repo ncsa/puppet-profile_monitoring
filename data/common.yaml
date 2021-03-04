@@ -1,0 +1,61 @@
+---
+lookup_options:
+  profile::telegraf::outputs:
+    merge:
+      strategy: deep
+      merge_hash_arrays: true
+  profile::telegraf::required_pkgs:
+    merge:
+      strategy: deep
+
+anchors:
+  - &telegraf_outputs_influxdb_common
+    database: null
+    username: null
+    password: null
+    insecure_skip_verify: false
+    skip_database_creation: true
+
+profile::telegraf::outputs:
+  influxdb:
+    npcf-influxdb-collector:
+      <<: *telegraf_outputs_influxdb_common
+      urls:
+        - "https://npcf-influxdb.ncsa.illinois.edu:8086"
+    ncsa-influxdb-collector:
+      <<: *telegraf_outputs_influxdb_common
+      urls:
+        - "https://ncsa-influxdb.ncsa.illinois.edu:8086"
+
+telegraf::agent:
+  flush_interval: "10s"
+  metric_buffer_limit: "100000"
+telegraf::flush_jitter: "10s"
+telegraf::inputs:
+  cpu:
+    percpu: false
+    totalcpu: true
+  disk:
+    ignore_fs:
+      - "devtmpfs"
+      - "devfs"
+  ipmi_sensor:
+    path: "/usr/bin/ipmitool"
+    interval: "60s"
+    timeout: "10s"
+  mem: [{}]
+  net:
+    interfaces:
+      - "e*"
+      - "bond*"
+  processes: [{}]
+  puppetagent:
+    location: "/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml"
+  swap: [{}]
+  system: [{}]
+  systemd_units:
+    unittype: "service"
+telegraf::interval: "60s"
+telegraf::manage_repo: false
+telegraf::outputs: {}
+
