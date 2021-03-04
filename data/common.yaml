@@ -7,13 +7,6 @@ lookup_options:
   profile_monitoring::telegraf::required_pkgs:
     merge:
       strategy: "deep"
-anchors:
-  - &telegraf_outputs_influxdb_common
-    database: null
-    username: null
-    password: null
-    insecure_skip_verify: false
-    skip_database_creation: true
 profile_monitoring::telegraf::enabled: false
 profile_monitoring::telegraf::outputs:
   influxdb:
