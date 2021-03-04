@@ -1,6 +1,6 @@
-# @summary A short summary of the purpose of this class
+# @summary Configure RAID monitoring if RAID found
 #
-# A description of what this class does
+# Configure RAID monitoring if RAID found
 #
 # @example
 #   include profile_monitoring::raid
@@ -27,11 +27,11 @@ class profile_monitoring::raid {
   if ( ! empty($perc_disk) )
   {
     file { '/root/perccli-007.1327.0000.0000-1.noarch.rpm':
-      source  => "puppet:///modules/${module_name}/root/perccli-007.1327.0000.0000-1.noarch.rpm",
       ensure => 'file',
-      owner => 'root',
-      group => 'root',
-      mode => '640',
+      source => "puppet:///modules/${module_name}/root/perccli-007.1327.0000.0000-1.noarch.rpm",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0640',
     }
     ensure_packages( 'perccli' => {
       source => '/root/perccli-007.1327.0000.0000-1.noarch.rpm',
@@ -39,11 +39,11 @@ class profile_monitoring::raid {
       require => File['/root/perccli-007.1327.0000.0000-1.noarch.rpm'],
     } )
     file { '/root/scripts/perccli_wrapper.py':
-      source  => "puppet:///modules/${module_name}/root/scripts/perccli_wrapper.py",
       ensure => 'file',
-      owner => 'root',
-      group => 'root',
-      mode => '750',
+      source => "puppet:///modules/${module_name}/root/scripts/perccli_wrapper.py",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0750',
     }
   }
   if (
@@ -51,14 +51,14 @@ class profile_monitoring::raid {
     or ! empty($megaraid_disk)
   )
   {
-    yumrepo { "aeris":
-      descr    => "Aeris Packages for Enterprise Linux ${::facts['os']['release']['major']} - stable - ${::facts['os']['architecture']}",
-      ensure   => present,
-      baseurl  => "https://repo.aerisnetwork.com/stable/centos/${::facts['os']['release']['major']}/${::facts['os']['architecture']}",
-      enabled  => 1,
+    yumrepo { 'aeris':
+      ensure         => present,
+      descr          => "Aeris Packages for Enterprise Linux ${::facts['os']['release']['major']} - stable - ${::facts['os']['architecture']}",
+      baseurl        => "https://repo.aerisnetwork.com/stable/centos/${::facts['os']['release']['major']}/${::facts['os']['architecture']}",
+      enabled        => 1,
       failovermethod => 'priority',
-      gpgkey   => 'https://repo.aerisnetwork.com/pub/RPM-GPG-KEY-AERIS',
-      gpgcheck => 1,
+      gpgkey         => 'https://repo.aerisnetwork.com/pub/RPM-GPG-KEY-AERIS',
+      gpgcheck       => 1,
     }
     Package {
       ensure => 'installed',
@@ -70,13 +70,16 @@ class profile_monitoring::raid {
     ensure_packages( $megaraidpkgs )
 
     file { '/root/scripts/storcli_wrapper.py':
-      source  => "puppet:///modules/${module_name}/root/scripts/storcli_wrapper.py",
       ensure => 'file',
-      owner => 'root',
-      group => 'root',
-      mode => '750',
+      source => "puppet:///modules/${module_name}/root/scripts/storcli_wrapper.py",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0750',
     }
 
   }
+
+  ## TO DO
+  ## SETUP A telegraf input FOR THE RAID *_wrapper.py SCRIPTS
 
 }
