@@ -48,8 +48,13 @@ But in order to enable telegraf monitoring, your project will need a database an
 
   ```
 
-2. And you need to supply an `anchors` parameter in hiera similar to the following that provides your InfluxDB `database`, `username`, and `password`:
+2. And you need to supply additional parameteris in hiera similar to the following to configure telegraf outputs to you your InfluxDB `database`, `username`, and `password`:
   ```
+  lookup_options:
+    profile_monitoring::telegraf::outputs:
+      merge:
+        strategy: "deep"
+        merge_hash_arrays: true
   anchors:
     - &telegraf_outputs_influxdb_common
       database: "PROJECT_NAME"
@@ -57,8 +62,53 @@ But in order to enable telegraf monitoring, your project will need a database an
       password: "PASSWORD"
       insecure_skip_verify: false
       skip_database_creation: true
+  profile_monitoring::telegraf::outputs:
+    influxdb:
+      npcf-influxdb-collector:
+        <<: *telegraf_outputs_influxdb_common
+        urls:
+          - "https://npcf-influxdb.ncsa.illinois.edu:8086"
+      ncsa-influxdb-collector:
+        <<: *telegraf_outputs_influxdb_common
+        urls:
+          - "https://ncsa-influxdb.ncsa.illinois.edu:8086"
   ```
   Note that `PROJECT_NAME`, `USERNAME__write`, and `PASSWORD` above are placeholders for the real values that you would receive from NCSA ICI Monitoring.
+
+3. And finally you need to set parameters for the telegraf module, similar to the following:
+  ```
+  telegraf::agent:
+    flush_interval: "10s"
+    metric_buffer_limit: "100000"
+  telegraf::flush_jitter: "10s"
+  telegraf::inputs:
+    cpu:
+      percpu: false
+      totalcpu: true
+    disk:
+      ignore_fs:
+        - "devtmpfs"
+        - "devfs"
+    ipmi_sensor:
+      path: "/usr/bin/ipmitool"
+      interval: "60s"
+      timeout: "10s"
+    mem: [{}]
+    net:
+      interfaces:
+        - "e*"
+        - "bond*"
+    processes: [{}]
+    puppetagent:
+      location: "/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml"
+    swap: [{}]
+    system: [{}]
+    systemd_units:
+      unittype: "service"
+  telegraf::interval: "60s"
+  telegraf::manage_repo: true
+  telegraf::outputs: {}
+  ```
 
 ## Reference
 
@@ -66,7 +116,8 @@ See: [REFERENCE.md](REFERENCE.md)
 
 ## Limitations
 
-n/a
+This module depends on the following modules:
+- https://github.com/ncsa/puppet-telegraf
 
 ## Development
 
