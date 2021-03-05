@@ -29,9 +29,9 @@ This puppet profile configures standard monitoring of a host.
 
 ### Beginning with profile_monitoring
 
-Include profile_motd in a puppet profile file:
+Include profile_monitoring in a puppet profile file:
 ```
-include ::profile_motd
+include ::profile_monitoring
 ```
 
 ## Usage
