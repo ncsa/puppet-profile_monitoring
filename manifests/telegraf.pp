@@ -25,8 +25,8 @@ class profile_monitoring::telegraf (
   Hash    $required_pkgs,
 ) {
 
-    if ( $enabled )
-    {
+  if ( $enabled )
+  {
 
     include ::telegraf
 
@@ -61,6 +61,18 @@ class profile_monitoring::telegraf (
     file { '/opt/puppetlabs/puppet/cache':
       ensure => 'directory',
       mode   => '0755',
+    }
+
+    # Set exported resource to populate telegraf ping check via ::profile_monitoring::telegraf_ping_check
+    @@file_line { "exported_telegraf_ping_check_${::fqdn}":
+      ensure   => 'present',
+      after    => 'urls',
+      line     => "    \"${::fqdn}\",",
+      match    => $::fqdn,
+      multiple => 'false',
+      notify   => Service['telegraf'],
+      path     => '/etc/telegraf/telegraf.d/ping-check.conf',
+      tag      => 'telegraf_ping_check',
     }
 
   }

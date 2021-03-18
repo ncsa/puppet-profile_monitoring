@@ -5,34 +5,16 @@
 
 NCSA Common Puppet Profiles - configure standard monitoring of host
 
-## Table of Contents
 
-1. [Description](#description)
-1. [Setup - The basics of getting started with profile_monitoring](#setup)
-    * [What profile_monitoring affects](#what-profile_monitoring-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with profile_monitoring](#beginning-with-profile_monitoring)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
+## Dependencies
+- https://github.com/ncsa/puppet-telegraf
+- [puppetlabs-stdlib](https://forge.puppet.com/modules/puppetlabs/stdlib)
 
-## Description
 
-This puppet profile configures standard monitoring of a host.
+## Reference
 
-## Setup
+[REFERENCE.md](REFERENCE.md)
 
-### What profile_monitoring affects
-
-* `/etc/telegraf`
-* RAID scripts under `/root/scripts` (if RAID found)
-
-### Beginning with profile_monitoring
-
-Include profile_monitoring in a puppet profile file:
-```
-include ::profile_monitoring
-```
 
 ## Usage
 
@@ -109,16 +91,3 @@ But in order to enable telegraf monitoring, your project will need a database an
   telegraf::manage_repo: true
   telegraf::outputs: {}
   ```
-
-## Reference
-
-See: [REFERENCE.md](REFERENCE.md)
-
-## Limitations
-
-This module depends on the following modules:
-- https://github.com/ncsa/puppet-telegraf
-
-## Development
-
-This Common Puppet Profile is managed by NCSA for internal usage.
