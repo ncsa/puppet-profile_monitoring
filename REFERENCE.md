@@ -6,16 +6,21 @@
 
 ### Classes
 
-* [`profile_monitoring`](#profile_monitoring): A short summary of the purpose of this class
-* [`profile_monitoring::raid`](#profile_monitoringraid): Configure RAID monitoring if RAID found
+* [`profile_monitoring`](#profile_monitoring): Configure default NCSA monitoring of this host
+* [`profile_monitoring::register_ping_check`](#profile_monitoringregister_ping_check): Register the node for ping monitoring
+Ping checks happen from other nodes via profile_monitoring::telegraf_ping_check
+This class is used to register a given node with external ping checking node(s)
+This class does not depend on telegraf being installed on the node
 * [`profile_monitoring::telegraf`](#profile_monitoringtelegraf): Setup telegraf on a node
-* [`profile_monitoring::telegraf_ping_check`](#profile_monitoringtelegraf_ping_check): A short summary of the purpose of this class
+* [`profile_monitoring::telegraf_ping_check`](#profile_monitoringtelegraf_ping_check): Setup telegraf input for ping monitoring of hosts
+* [`profile_monitoring::telegraf_sslcert_check`](#profile_monitoringtelegraf_sslcert_check): Setup telegraf input for monitoring ssl certificates
+* [`profile_monitoring::telegraf_website_check`](#profile_monitoringtelegraf_website_check): Setup telegraf input for monitoring websites
 
 ## Classes
 
 ### <a name="profile_monitoring"></a>`profile_monitoring`
 
-A description of what this class does
+Configure default NCSA monitoring of this host
 
 #### Examples
 
@@ -25,16 +30,19 @@ A description of what this class does
 include profile_monitoring
 ```
 
-### <a name="profile_monitoringraid"></a>`profile_monitoring::raid`
+### <a name="profile_monitoringregister_ping_check"></a>`profile_monitoring::register_ping_check`
 
-Configure RAID monitoring if RAID found
+Register the node for ping monitoring
+Ping checks happen from other nodes via profile_monitoring::telegraf_ping_check
+This class is used to register a given node with external ping checking node(s)
+This class does not depend on telegraf being installed on the node
 
 #### Examples
 
 ##### 
 
 ```puppet
-include profile_monitoring::raid
+include profile_monitoring::register_ping_check
 ```
 
 ### <a name="profile_monitoringtelegraf"></a>`profile_monitoring::telegraf`
@@ -54,6 +62,8 @@ include profile_monitoring::telegraf
 The following parameters are available in the `profile_monitoring::telegraf` class:
 
 * [`enabled`](#enabled)
+* [`inputs_extra`](#inputs_extra)
+* [`inputs_extra_scripts`](#inputs_extra_scripts)
 * [`outputs`](#outputs)
 * [`required_pkgs`](#required_pkgs)
 
@@ -63,11 +73,30 @@ Data type: `Boolean`
 
 boolean flag to enable telegraf on the node
 
+##### <a name="inputs_extra"></a>`inputs_extra`
+
+Data type: `Hash`
+
+Define extra input types and parameters for each.
+See data/common.yaml for samples
+Inputs defined here are all named, therefore allow parameter merging
+across multiple layers of hiera
+
+##### <a name="inputs_extra_scripts"></a>`inputs_extra_scripts`
+
+Data type: `Hash`
+
+Define extra input script files
+See data/common.yaml for samples
+Files defined here are all named, therefore allow parameter merging
+across multiple layers of hiera
+
 ##### <a name="outputs"></a>`outputs`
 
 Data type: `Hash`
 
 Define output types and parameters for each.
+See data/common.yaml for samples
 Outputs defined here are all named, therefore allow parameter merging
 across multiple layers of hiera
 
@@ -84,7 +113,7 @@ where `pkg_options` are valid Puppet package attributes.
 
 ### <a name="profile_monitoringtelegraf_ping_check"></a>`profile_monitoring::telegraf_ping_check`
 
-A description of what this class does
+Setup telegraf input for ping monitoring of hosts
 
 #### Examples
 
@@ -99,10 +128,86 @@ include profile_monitoring::telegraf_ping_check
 The following parameters are available in the `profile_monitoring::telegraf_ping_check` class:
 
 * [`content`](#content)
+* [`count`](#count)
+* [`interval`](#interval)
 
 ##### <a name="content"></a>`content`
 
 Data type: `String`
 
+string content of telegraf input file template
 
+##### <a name="count"></a>`count`
+
+Data type: `Integer`
+
+integer of count attempts for each ping test
+
+##### <a name="interval"></a>`interval`
+
+Data type: `String`
+
+string of interval used by telegraf input
+
+### <a name="profile_monitoringtelegraf_sslcert_check"></a>`profile_monitoring::telegraf_sslcert_check`
+
+Setup telegraf input for monitoring ssl certificates
+
+#### Examples
+
+##### 
+
+```puppet
+include profile_monitoring::telegraf_sslcert_check
+```
+
+#### Parameters
+
+The following parameters are available in the `profile_monitoring::telegraf_sslcert_check` class:
+
+* [`content`](#content)
+* [`interval`](#interval)
+
+##### <a name="content"></a>`content`
+
+Data type: `String`
+
+string content of telegraf input file template
+
+##### <a name="interval"></a>`interval`
+
+Data type: `String`
+
+string of interval used by telegraf input
+
+### <a name="profile_monitoringtelegraf_website_check"></a>`profile_monitoring::telegraf_website_check`
+
+Setup telegraf input for monitoring websites
+
+#### Examples
+
+##### 
+
+```puppet
+include profile_monitoring::telegraf_website_check
+```
+
+#### Parameters
+
+The following parameters are available in the `profile_monitoring::telegraf_website_check` class:
+
+* [`content`](#content)
+* [`interval`](#interval)
+
+##### <a name="content"></a>`content`
+
+Data type: `String`
+
+string content of telegraf input file template
+
+##### <a name="interval"></a>`interval`
+
+Data type: `String`
+
+string of interval used by telegraf input
 

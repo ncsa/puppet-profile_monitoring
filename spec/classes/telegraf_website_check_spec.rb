@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'profile_monitoring::raid' do
+describe 'profile_monitoring::telegraf_website_check' do
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }

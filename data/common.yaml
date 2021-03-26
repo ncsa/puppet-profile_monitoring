@@ -1,10 +1,18 @@
 ---
 # COMMENTED OUT PARAMETERS NEED TO BE SET ELSEWHERE TO ENABLE AND CONFIGURE TELEGRAF
 lookup_options:
-#  profile_monitoring::telegraf::outputs:
-#    merge:
-#      strategy: "deep"
-#      merge_hash_arrays: true
+  profile_monitoring::telegraf::inputs_extra:
+    merge:
+      strategy: "deep"
+      merge_hash_arrays: true
+  profile_monitoring::telegraf::input_extra_scripts:
+    merge:
+      strategy: "deep"
+      merge_hash_arrays: true
+  profile_monitoring::telegraf::outputs:
+    merge:
+      strategy: "deep"
+      merge_hash_arrays: true
   profile_monitoring::telegraf::required_pkgs:
     merge:
       strategy: "deep"
@@ -16,6 +24,36 @@ lookup_options:
 #    insecure_skip_verify: false
 #    skip_database_creation: true
 profile_monitoring::telegraf::enabled: false
+profile_monitoring::telegraf::inputs_extra:
+  exec:
+    mount-state:
+      command: "/etc/telegraf/scripts/mount-state.sh"
+      data_format: "influx"
+      interval: "1m"
+      timeout: "30s"
+profile_monitoring::telegraf::inputs_extra_scripts:
+  "/etc/telegraf/scripts":
+    ensure: "directory"
+    mode: "0755"
+  "/etc/telegraf/scripts/mount-state.sh":
+    content: |
+      #!/bin/bash
+      ro_mounts=$(findmnt -O ro -n --list -t notmpfs,noiso9660)
+      host=$(hostname -f)
+      if [ -z "$ro_mounts" ]; then
+        exit 0
+      fi
+      while read -r line
+      do
+        read target src fstype options <<< "$line"
+        #echo "Target=$target:Source=$src:fstype=$fstype:Options=$options"
+        if [[ -z "$target" || -z "$src" || -z "$fstype" || -z "$options" ]]; then
+          #echo "Something not defined, generate an alert"
+          echo "mount-state,nodeName=$host,mount=ERRORPLACEHOLDER,src=ERRORPLACEHOLDER mountState=1"
+          continue
+        fi
+        echo "mount-state,nodeName=$host,mount=$target,source=$src mountState=1"
+      done <<< "$ro_mounts"
 #profile_monitoring::telegraf::outputs:
 #  influxdb:
 #    npcf-influxdb-collector:
@@ -30,34 +68,19 @@ profile_monitoring::telegraf_ping_check::content: |
   [[inputs.ping]]
     urls = [
     ]
-#telegraf::agent:
-#  flush_interval: "10s"
-#  metric_buffer_limit: "100000"
-#telegraf::flush_jitter: "10s"
-#telegraf::inputs:
-#  cpu:
-#    percpu: false
-#    totalcpu: true
-#  disk:
-#    ignore_fs:
-#      - "devtmpfs"
-#      - "devfs"
-#  ipmi_sensor:
-#    path: "/usr/bin/ipmitool"
-#    interval: "60s"
-#    timeout: "10s"
-#  mem: [{}]
-#  net:
-#    interfaces:
-#      - "e*"
-#      - "bond*"
-#  processes: [{}]
-#  puppetagent:
-#    location: "/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml"
-#  swap: [{}]
-#  system: [{}]
-#  systemd_units:
-#    unittype: "service"
-#telegraf::interval: "60s"
-#telegraf::manage_repo: true
-#telegraf::outputs: {}
+    count = 5,
+    interval = "1m"
+profile_monitoring::telegraf_ping_check::count: 5
+profile_monitoring::telegraf_ping_check::interval: "2m"
+profile_monitoring::telegraf_sslcert_check::content: |
+  [[inputs.x509_cert]]
+    urls = [
+    ]
+    interval = "3h"
+profile_monitoring::telegraf_sslcert_check::interval: "3h"
+profile_monitoring::telegraf_website_check::content: |
+  [[inputs.http_response]]
+    urls = [
+    ]
+    interval = "1m"
+profile_monitoring::telegraf_website_check::interval: "5m"

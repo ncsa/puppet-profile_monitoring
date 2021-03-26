@@ -3,8 +3,21 @@
 # @param enabled
 #   boolean flag to enable telegraf on the node
 #
+# @param inputs_extra
+#   Define extra input types and parameters for each.
+#   See data/common.yaml for samples
+#   Inputs defined here are all named, therefore allow parameter merging
+#   across multiple layers of hiera
+#
+# @param inputs_extra_scripts
+#   Define extra input script files
+#   See data/common.yaml for samples
+#   Files defined here are all named, therefore allow parameter merging
+#   across multiple layers of hiera
+#
 # @param outputs
 #   Define output types and parameters for each.
+#   See data/common.yaml for samples
 #   Outputs defined here are all named, therefore allow parameter merging
 #   across multiple layers of hiera
 #
@@ -21,6 +34,8 @@
 #
 class profile_monitoring::telegraf (
   Boolean $enabled,
+  Hash    $inputs_extra,
+  Hash    $inputs_extra_scripts,
   Hash    $outputs,
   Hash    $required_pkgs,
 ) {
@@ -32,6 +47,24 @@ class profile_monitoring::telegraf (
 
     # Ensure required packages
     ensure_packages( $required_pkgs, {'ensure' => 'installed' } )
+
+    # Install extra inputs
+    $inputs_extra.each | $plugin_type, $entry | {
+      $entry.each | $entry_name, $options | {
+        telegraf::input { $entry_name :
+          plugin_type => $plugin_type,
+          options     => [ $options ],
+        }
+      }
+    }
+    $inputs_extra_scripts_defaults = {
+      ensure  => file,
+      owner   => root,
+      group   => telegraf,
+      mode    => '0754',
+    }
+    # Ensure the resources
+    ensure_resources( 'file', $inputs_extra_scripts, $inputs_extra_scripts_defaults )
 
     # Install outputs
     $outputs.each | $plugin_type, $entry | {
@@ -61,18 +94,6 @@ class profile_monitoring::telegraf (
     file { '/opt/puppetlabs/puppet/cache':
       ensure => 'directory',
       mode   => '0755',
-    }
-
-    # Set exported resource to populate telegraf ping check via ::profile_monitoring::telegraf_ping_check
-    @@file_line { "exported_telegraf_ping_check_${::fqdn}":
-      ensure   => 'present',
-      after    => 'urls',
-      line     => "    \"${::fqdn}\",",
-      match    => $::fqdn,
-      multiple => 'false',
-      notify   => Service['telegraf'],
-      path     => '/etc/telegraf/telegraf.d/ping-check.conf',
-      tag      => 'telegraf_ping_check',
     }
 
   }

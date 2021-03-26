@@ -9,6 +9,7 @@ NCSA Common Puppet Profiles - configure standard monitoring of host
 ## Dependencies
 - https://github.com/ncsa/puppet-telegraf
 - [puppetlabs-stdlib](https://forge.puppet.com/modules/puppetlabs/stdlib)
+- [PuppetDB](https://puppet.com/docs/puppetdb/) (for exported resources)
 
 
 ## Reference
@@ -91,3 +92,18 @@ But in order to enable telegraf monitoring, your project will need a database an
   telegraf::manage_repo: true
   telegraf::outputs: {}
   ```
+
+### Enabling telegraf monitoring nodes
+
+Some monitoring needs to happen from a remote node. For this sort of monitoring, 
+we suggest setting up extra telegraf checks for one or more central servers. 
+Include one or more of the following classes in Puppet roles that you want to monitor your other servers:
+
+  ```
+  include profile_monitoring::telegraf_ping_check
+  include profile_monitoring::telegraf_sslcert_check
+  include profile_monitoring::telegraf_website_check
+  ```
+
+Note that each of these classes support the dynamic collection of tagged exported 
+resources that can be defined in other classes (e.g. as done in `profile_monitoring::register_ping_check`).

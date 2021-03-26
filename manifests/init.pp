@@ -1,12 +1,11 @@
-# @summary A short summary of the purpose of this class
-#
-# A description of what this class does
+# @summary Configure default NCSA monitoring of this host
 #
 # @example
 #   include profile_monitoring
+#
 class profile_monitoring {
 
-  #include profile_monitoring::raid
+  include profile_monitoring::register_ping_check
   include profile_monitoring::telegraf
 
 }
