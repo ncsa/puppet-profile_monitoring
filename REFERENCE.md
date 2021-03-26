@@ -7,6 +7,8 @@
 ### Classes
 
 * [`profile_monitoring`](#profile_monitoring): Configure default NCSA monitoring of this host
+* [`profile_monitoring::raid`](#profile_monitoringraid): Configure RAID monitoring if RAID found
+This is a work in progress and not expected to be used yet in production.
 * [`profile_monitoring::register_ping_check`](#profile_monitoringregister_ping_check): Register the node for ping monitoring
 Ping checks happen from other nodes via profile_monitoring::telegraf_ping_check
 This class is used to register a given node with external ping checking node(s)
@@ -28,6 +30,19 @@ Configure default NCSA monitoring of this host
 
 ```puppet
 include profile_monitoring
+```
+
+### <a name="profile_monitoringraid"></a>`profile_monitoring::raid`
+
+Configure RAID monitoring if RAID found
+This is a work in progress and not expected to be used yet in production.
+
+#### Examples
+
+##### 
+
+```puppet
+include profile_monitoring::raid
 ```
 
 ### <a name="profile_monitoringregister_ping_check"></a>`profile_monitoring::register_ping_check`
