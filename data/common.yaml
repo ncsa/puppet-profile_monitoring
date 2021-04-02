@@ -74,7 +74,7 @@ profile_monitoring::telegraf_ping_check::count: 5
 profile_monitoring::telegraf_ping_check::interval: "2m"
 profile_monitoring::telegraf_sslcert_check::content: |
   [[inputs.x509_cert]]
-    urls = [
+    sources = [
     ]
     interval = "3h"
 profile_monitoring::telegraf_sslcert_check::interval: "3h"
