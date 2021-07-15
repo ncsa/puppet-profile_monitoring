@@ -62,6 +62,10 @@ include profile_monitoring::telegraf
 The following parameters are available in the `profile_monitoring::telegraf` class:
 
 * [`enabled`](#enabled)
+* [`config_dirs`](#config_dirs)
+* [`config_dirs_default_group`](#config_dirs_default_group)
+* [`config_dirs_default_mode`](#config_dirs_default_mode)
+* [`config_dirs_default_owner`](#config_dirs_default_owner)
 * [`inputs_extra`](#inputs_extra)
 * [`inputs_extra_scripts`](#inputs_extra_scripts)
 * [`outputs`](#outputs)
@@ -72,6 +76,30 @@ The following parameters are available in the `profile_monitoring::telegraf` cla
 Data type: `Boolean`
 
 boolean flag to enable telegraf on the node
+
+##### <a name="config_dirs"></a>`config_dirs`
+
+Data type: `Hash`
+
+Hash of file resources for the telegraf config directories
+
+##### <a name="config_dirs_default_group"></a>`config_dirs_default_group`
+
+Data type: `String`
+
+String of the telegraf config directories default group permissions
+
+##### <a name="config_dirs_default_mode"></a>`config_dirs_default_mode`
+
+Data type: `String`
+
+String of the telegraf config directories default mode permissions
+
+##### <a name="config_dirs_default_owner"></a>`config_dirs_default_owner`
+
+Data type: `String`
+
+String of the telegraf config directories default owner permissions
 
 ##### <a name="inputs_extra"></a>`inputs_extra`
 

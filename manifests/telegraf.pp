@@ -3,6 +3,18 @@
 # @param enabled
 #   boolean flag to enable telegraf on the node
 #
+# @param config_dirs
+#   Hash of file resources for the telegraf config directories
+#
+# @param config_dirs_default_group
+#   String of the telegraf config directories default group permissions
+#
+# @param config_dirs_default_mode
+#   String of the telegraf config directories default mode permissions
+#
+# @param config_dirs_default_owner
+#   String of the telegraf config directories default owner permissions
+#
 # @param inputs_extra
 #   Define extra input types and parameters for each.
 #   See data/common.yaml for samples
@@ -34,6 +46,10 @@
 #
 class profile_monitoring::telegraf (
   Boolean $enabled,
+  Hash    $config_dirs,
+  String  $config_dirs_default_group,
+  String  $config_dirs_default_mode,
+  String  $config_dirs_default_owner,
   Hash    $inputs_extra,
   Hash    $inputs_extra_scripts,
   Hash    $outputs,
@@ -61,7 +77,7 @@ class profile_monitoring::telegraf (
       ensure  => file,
       owner   => root,
       group   => telegraf,
-      mode    => '0754',
+      mode    => '0750',
     }
     # Ensure the resources
     ensure_resources( 'file', $inputs_extra_scripts, $inputs_extra_scripts_defaults )
@@ -80,7 +96,7 @@ class profile_monitoring::telegraf (
     $udevrules_ipmi = 'KERNEL=="ipmi*", MODE="660", GROUP="telegraf"'
     file { '/lib/udev/rules.d/52-telegraf-ipmi.rules':
       ensure  => 'present',
-      mode    => '0644',
+      mode    => '0640',
       content => $udevrules_ipmi,
       notify  => Exec[ 'udevadm4telegraf' ],
     }
@@ -89,6 +105,15 @@ class profile_monitoring::telegraf (
       command     => '/sbin/udevadm control --reload-rules && /sbin/udevadm trigger',
       refreshonly => true,
     }
+
+    # Update telegraf configuration directories permissions
+    $config_dirs_defaults = {
+      ensure => 'directory',
+      group  => $config_dirs_default_group,
+      mode   => $config_dirs_default_mode,
+      owner  => $config_dirs_default_owner,
+    }
+    ensure_resources('file', $config_dirs, $config_dirs_defaults )
 
     # Ensure telegraf can read puppet stats
     file { '/opt/puppetlabs/puppet/cache':

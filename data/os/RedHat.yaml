@@ -1,3 +1,10 @@
 ---
+profile_monitoring::telegraf::config_dirs:
+  "/etc/telegraf": {}
+  "/etc/telegraf/scripts": {}
+  "/etc/telegraf/telegraf.d": {}
+profile_monitoring::telegraf::config_dirs_default_group: "telegraf"
+profile_monitoring::telegraf::config_dirs_default_mode: "0750"
+profile_monitoring::telegraf::config_dirs_default_owner: "root"
 profile_monitoring::telegraf::required_pkgs:
   ipmitool:
