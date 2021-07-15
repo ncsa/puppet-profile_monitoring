@@ -64,6 +64,15 @@ class profile_monitoring::telegraf (
     # Ensure required packages
     ensure_packages( $required_pkgs, {'ensure' => 'installed' } )
 
+    # Update telegraf configuration directories permissions
+    $config_dirs_defaults = {
+      ensure => 'directory',
+      group  => $config_dirs_default_group,
+      mode   => $config_dirs_default_mode,
+      owner  => $config_dirs_default_owner,
+    }
+    ensure_resources('file', $config_dirs, $config_dirs_defaults )
+
     # Install extra inputs
     $inputs_extra.each | $plugin_type, $entry | {
       $entry.each | $entry_name, $options | {
@@ -75,8 +84,8 @@ class profile_monitoring::telegraf (
     }
     $inputs_extra_scripts_defaults = {
       ensure  => file,
-      owner   => root,
-      group   => telegraf,
+      owner   => $config_dirs_default_owner,
+      group   => $config_dirs_default_group,
       mode    => '0750',
     }
     # Ensure the resources
@@ -105,15 +114,6 @@ class profile_monitoring::telegraf (
       command     => '/sbin/udevadm control --reload-rules && /sbin/udevadm trigger',
       refreshonly => true,
     }
-
-    # Update telegraf configuration directories permissions
-    $config_dirs_defaults = {
-      ensure => 'directory',
-      group  => $config_dirs_default_group,
-      mode   => $config_dirs_default_mode,
-      owner  => $config_dirs_default_owner,
-    }
-    ensure_resources('file', $config_dirs, $config_dirs_defaults )
 
     # Ensure telegraf can read puppet stats
     file { '/opt/puppetlabs/puppet/cache':

@@ -32,9 +32,6 @@ profile_monitoring::telegraf::inputs_extra:
       interval: "1m"
       timeout: "30s"
 profile_monitoring::telegraf::inputs_extra_scripts:
-  "/etc/telegraf/scripts":
-    ensure: "directory"
-    mode: "0755"
   "/etc/telegraf/scripts/mount-state.sh":
     content: |
       #!/bin/bash
