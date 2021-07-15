@@ -23,6 +23,12 @@ lookup_options:
 #    password: "PASSWORD"
 #    insecure_skip_verify: false
 #    skip_database_creation: true
+profile_monitoring::telegraf::config_dirs:
+  "/etc/telegraf": {}
+  "/etc/telegraf/scripts": {}
+profile_monitoring::telegraf::config_dirs_default_group: "telegraf"
+profile_monitoring::telegraf::config_dirs_default_mode: "0750"
+profile_monitoring::telegraf::config_dirs_default_owner: "root"
 profile_monitoring::telegraf::enabled: false
 profile_monitoring::telegraf::inputs_extra:
   exec:
@@ -32,9 +38,6 @@ profile_monitoring::telegraf::inputs_extra:
       interval: "1m"
       timeout: "30s"
 profile_monitoring::telegraf::inputs_extra_scripts:
-  "/etc/telegraf/scripts":
-    ensure: "directory"
-    mode: "0755"
   "/etc/telegraf/scripts/mount-state.sh":
     content: |
       #!/bin/bash
