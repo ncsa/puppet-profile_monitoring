@@ -21,7 +21,7 @@ class profile_monitoring::telegraf_sslcert_check (
     file { '/etc/telegraf/telegraf.d/sslcert-check.conf':
       content => $content,
       group   => 'telegraf',
-      mode    => '0644',
+      mode    => '0640',
       owner   => 'root',
       replace => false,
       notify  => Service['telegraf'],
