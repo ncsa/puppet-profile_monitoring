@@ -41,7 +41,9 @@ profile_monitoring::telegraf::inputs_extra_scripts:
   "/etc/telegraf/scripts/mount-state.sh":
     content: |
       #!/bin/bash
-      ro_mounts=$(findmnt -O ro -n --list -t notmpfs,noiso9660)
+      KNOWN_RO_MOUNTS=("/sys/fs/cgroup")
+      #KNOWN_RO_MOUNTS=("/sys/fs/cgroup" "/path/2" "/path/3") # Syntax for >1 paths (can delimit w/ newline too)
+      ro_mounts=$(findmnt -O ro -n --list -t noiso9660)
       host=$(hostname -f)
       if [ -z "$ro_mounts" ]; then
         exit 0
@@ -55,6 +57,12 @@ profile_monitoring::telegraf::inputs_extra_scripts:
           echo "mount-state,nodeName=$host,mount=ERRORPLACEHOLDER,src=ERRORPLACEHOLDER mountState=1"
           continue
         fi
+        # Ignore filesystems known to be ro
+        for RO_MOUNT in "${KNOWN_RO_MOUNTS[@]}"; do
+          if [[ "$target" == "$RO_MOUNT" ]]; then
+            continue 2 # continue back to outer while loop
+          fi
+        done
         echo "mount-state,nodeName=$host,mount=$target,source=$src mountState=1"
       done <<< "$ro_mounts"
 #profile_monitoring::telegraf::outputs:
