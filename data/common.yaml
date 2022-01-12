@@ -37,6 +37,11 @@ profile_monitoring::telegraf::inputs_extra:
       data_format: "influx"
       interval: "1m"
       timeout: "30s"
+    ncsa_inventory:
+      command: "/etc/telegraf/scripts/ncsa_inventory.sh"
+      data_format: "influx"
+      interval: "168h"
+      timeout: "5m"
 profile_monitoring::telegraf::inputs_extra_scripts:
   "/etc/telegraf/scripts/mount-state.sh":
     content: |
@@ -65,6 +70,8 @@ profile_monitoring::telegraf::inputs_extra_scripts:
         done
         echo "mount-state,nodeName=$host,mount=$target,source=$src mountState=1"
       done <<< "$ro_mounts"
+  "/etc/telegraf/scripts/ncsa_inventory.sh":
+    source: "puppet:///modules/profile_monitoring/misc/ncsa_inventory.sh"
 #profile_monitoring::telegraf::outputs:
 #  influxdb:
 #    npcf-influxdb-collector:
