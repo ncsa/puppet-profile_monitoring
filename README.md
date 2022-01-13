@@ -26,13 +26,13 @@ But in order to enable telegraf monitoring, your project will need a database an
 ### Enabling telegraf with InfluxDB database access
 
 1. You need to set the `enabled` parameter to `true`:
-  ```
+  ```yaml
   profile_monitoring::telegraf::enabled: true
 
   ```
 
-2. And you need to supply additional parameteris in hiera similar to the following to configure telegraf outputs to you your InfluxDB `database`, `username`, and `password`:
-  ```
+2. And you need to supply additional parameters in hiera similar to the following to configure telegraf outputs to you your InfluxDB `database`, `password`, and `username`. `influxdb_database`, `influxdb_password`, and `influxdb_username` can be looked up from Vault if [Vault is configured as a hiera backend](https://github.com/southalc/vault#vault-as-a-hiera-backend).
+  ```yaml
   lookup_options:
     profile_monitoring::telegraf::outputs:
       merge:
@@ -40,9 +40,9 @@ But in order to enable telegraf monitoring, your project will need a database an
         merge_hash_arrays: true
   anchors:
     - &telegraf_outputs_influxdb_common
-      database: "PROJECT_NAME"
-      username: "USERNAME__write"
-      password: "PASSWORD"
+      database: "%{lookup('influxdb_database')}"  ## LOOKUP FROM VAULT
+      password: "%{lookup('influxdb_password')}"  ## LOOKUP FROM VAULT
+      username: "%{lookup('influxdb_username')}"  ## LOOKUP FROM VAULT
       insecure_skip_verify: false
       skip_database_creation: true
   profile_monitoring::telegraf::outputs:
@@ -56,10 +56,9 @@ But in order to enable telegraf monitoring, your project will need a database an
         urls:
           - "https://ncsa-influxdb.ncsa.illinois.edu:8086"
   ```
-  Note that `PROJECT_NAME`, `USERNAME__write`, and `PASSWORD` above are placeholders for the real values that you would receive from NCSA ICI Monitoring.
 
 3. And finally you need to set parameters for the telegraf module, similar to the following:
-  ```
+  ```yaml
   telegraf::agent:
     flush_interval: "10s"
     metric_buffer_limit: "100000"
