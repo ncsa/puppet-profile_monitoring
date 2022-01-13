@@ -56,9 +56,51 @@ class profile_monitoring::telegraf (
   Hash    $required_pkgs,
 ) {
 
-  if ( $enabled )
-  {
+  ## LOOKUP influxdb PARAMETERS (FROM VAULT/HIERA)
+  $influxdb_database = lookup('influxdb_database', String)
+  $influxdb_password = lookup('influxdb_password', String)
+  $influxdb_username = lookup('influxdb_username', String)
 
+  if ( $enabled and
+    (
+      ! $influxdb_database
+      or ! $influxdb_password
+      or ! $influxdb_username
+    )
+  ) {
+    if ( ! $influxdb_database )
+    {
+      $notify_text_database = @("EOT"/)
+        Telegraf is enabled, but no influxdb_database has been supplied for the \
+        influxdb database. A database must be supplied if telegraf is enabled.\
+        | EOT
+      notify { $notify_text_database:
+        withpath => true,
+      }
+    }
+    if ( ! $influxdb_password )
+    {
+      $notify_text_password = @("EOT"/)
+        Telegraf is enabled, but no influxdb_password has been supplied for the \
+        influxdb password. A password must be supplied if telegraf is enabled.\
+        | EOT
+      notify { $notify_text_password:
+        withpath => true,
+      }
+    }
+    if ( ! $influxdb_username )
+    {
+      $notify_text_username = @("EOT"/)
+        Telegraf is enabled, but no influxdb_username has been supplied for the \
+        influxdb username. A username must be supplied if telegraf is enabled.\
+        | EOT
+      notify { $notify_text_username:
+        withpath => true,
+      }
+    }
+  }
+  elsif ( $enabled and $influxdb_database and $influxdb_password and $influxdb_username )
+  {
     include ::telegraf
 
     # Ensure required packages
