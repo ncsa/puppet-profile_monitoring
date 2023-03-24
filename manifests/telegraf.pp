@@ -27,6 +27,15 @@
 #   Files defined here are all named, therefore allow parameter merging
 #   across multiple layers of hiera
 #
+# @param ipmi_sensor_plugin_enabled
+#   Enable or disable the ipmi_sensor telegraf plugin
+#   A seperate puppet fact is also used to only activate this plugin on nodes that are hardware
+#   So safe to enable this on virtual hosts too (will just be a noop)
+#
+# @param ipmi_sensor_telegraf_plugin_options
+#   Config that defines the options for the ipmi_sensor telegraf plugin
+#   Hash is passed directly to the telegraf::input class as the $options key
+#
 # @param outputs
 #   Define output types and parameters for each.
 #   See data/common.yaml for samples
@@ -52,6 +61,8 @@ class profile_monitoring::telegraf (
   String  $config_dirs_default_owner,
   Hash    $inputs_extra,
   Hash    $inputs_extra_scripts,
+  Boolean $ipmi_sensor_plugin_enabled,
+  Hash    $ipmi_sensor_telegraf_plugin_options,
   Hash    $outputs,
   Hash    $required_pkgs,
 ) {
@@ -163,6 +174,14 @@ class profile_monitoring::telegraf (
       mode   => '0755',
     }
 
+    # Install ipmi_sensor plugin
+    if ( $ipmi_sensor_plugin_enabled and $facts['virtual'] == 'physical' ) {
+      telegraf::input { 'ipmi_sensor' :
+        plugin_type => 'ipmi_sensor',
+        options     => [ $ipmi_sensor_telegraf_plugin_options ],
+        notify      => Exec[ 'udevadm4telegraf' ],
+      }
+    }
   }
 
 }

@@ -68,6 +68,8 @@ The following parameters are available in the `profile_monitoring::telegraf` cla
 * [`config_dirs_default_owner`](#config_dirs_default_owner)
 * [`inputs_extra`](#inputs_extra)
 * [`inputs_extra_scripts`](#inputs_extra_scripts)
+* [`ipmi_sensor_plugin_enabled`](#ipmi_sensor_plugin_enabled)
+* [`ipmi_sensor_telegraf_plugin_options`](#ipmi_sensor_telegraf_plugin_options)
 * [`outputs`](#outputs)
 * [`required_pkgs`](#required_pkgs)
 
@@ -118,6 +120,21 @@ Define extra input script files
 See data/common.yaml for samples
 Files defined here are all named, therefore allow parameter merging
 across multiple layers of hiera
+
+##### <a name="ipmi_sensor_plugin_enabled"></a>`ipmi_sensor_plugin_enabled`
+
+Data type: `Boolean`
+
+Enable or disable the ipmi_sensor telegraf plugin
+A seperate puppet fact is also used to only activate this plugin on nodes that are hardware
+So safe to enable this on virtual hosts too (will just be a noop)
+
+##### <a name="ipmi_sensor_telegraf_plugin_options"></a>`ipmi_sensor_telegraf_plugin_options`
+
+Data type: `Hash`
+
+Config that defines the options for the ipmi_sensor telegraf plugin
+Hash is passed directly to the telegraf::input class as the $options key
 
 ##### <a name="outputs"></a>`outputs`
 
