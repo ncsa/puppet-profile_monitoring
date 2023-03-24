@@ -72,6 +72,13 @@ profile_monitoring::telegraf::inputs_extra_scripts:
       done <<< "$ro_mounts"
   "/etc/telegraf/scripts/ncsa_inventory.sh":
     source: "puppet:///modules/profile_monitoring/misc/ncsa_inventory.sh"
+
+profile_monitoring::telegraf::ipmi_sensor_plugin_enabled: true
+profile_monitoring::telegraf::ipmi_sensor_telegraf_plugin_options:
+  path: "/usr/bin/ipmitool"
+  interval: "60s"
+  timeout: "10s"
+
 #profile_monitoring::telegraf::outputs:
 #  influxdb:
 #    npcf-influxdb-collector:
