@@ -66,7 +66,6 @@ class profile_monitoring::telegraf (
   Hash    $outputs,
   Hash    $required_pkgs,
 ) {
-
   ## LOOKUP influxdb PARAMETERS (FROM VAULT/HIERA)
   $influxdb_database = lookup('influxdb_database', String)
   $influxdb_password = lookup('influxdb_password', String)
@@ -79,8 +78,7 @@ class profile_monitoring::telegraf (
       or ! $influxdb_username
     )
   ) {
-    if ( ! $influxdb_database )
-    {
+    if ( ! $influxdb_database ) {
       $notify_text_database = @("EOT"/)
         Telegraf is enabled, but no influxdb_database has been supplied for the \
         influxdb database. A database must be supplied if telegraf is enabled.\
@@ -89,8 +87,7 @@ class profile_monitoring::telegraf (
         withpath => true,
       }
     }
-    if ( ! $influxdb_password )
-    {
+    if ( ! $influxdb_password ) {
       $notify_text_password = @("EOT"/)
         Telegraf is enabled, but no influxdb_password has been supplied for the \
         influxdb password. A password must be supplied if telegraf is enabled.\
@@ -99,8 +96,7 @@ class profile_monitoring::telegraf (
         withpath => true,
       }
     }
-    if ( ! $influxdb_username )
-    {
+    if ( ! $influxdb_username ) {
       $notify_text_username = @("EOT"/)
         Telegraf is enabled, but no influxdb_username has been supplied for the \
         influxdb username. A username must be supplied if telegraf is enabled.\
@@ -110,12 +106,11 @@ class profile_monitoring::telegraf (
       }
     }
   }
-  elsif ( $enabled and $influxdb_database and $influxdb_password and $influxdb_username )
-  {
-    include ::telegraf
+  elsif ( $enabled and $influxdb_database and $influxdb_password and $influxdb_username ) {
+    include telegraf
 
     # Ensure required packages
-    ensure_packages( $required_pkgs, {'ensure' => 'installed' } )
+    ensure_packages( $required_pkgs, { 'ensure' => 'installed' })
 
     # Update telegraf configuration directories permissions
     $config_dirs_defaults = {
@@ -131,7 +126,7 @@ class profile_monitoring::telegraf (
       $entry.each | $entry_name, $options | {
         telegraf::input { $entry_name :
           plugin_type => $plugin_type,
-          options     => [ $options ],
+          options     => [$options],
         }
       }
     }
@@ -149,7 +144,7 @@ class profile_monitoring::telegraf (
       $entry.each | $entry_name, $options | {
         telegraf::output { $entry_name :
           plugin_type => $plugin_type,
-          options     => [ $options ],
+          options     => [$options],
         }
       }
     }
@@ -157,10 +152,10 @@ class profile_monitoring::telegraf (
     # Place udev rule for ipmi commands on nodes running telegraf
     $udevrules_ipmi = 'KERNEL=="ipmi*", MODE="660", GROUP="telegraf"'
     file { '/lib/udev/rules.d/52-telegraf-ipmi.rules':
-      ensure  => 'present',
+      ensure  => 'file',
       mode    => '0640',
       content => $udevrules_ipmi,
-      notify  => Exec[ 'udevadm4telegraf' ],
+      notify  => Exec['udevadm4telegraf'],
     }
 
     exec { 'udevadm4telegraf':
@@ -178,10 +173,9 @@ class profile_monitoring::telegraf (
     if ( $ipmi_sensor_plugin_enabled and $facts['virtual'] == 'physical' ) {
       telegraf::input { 'ipmi_sensor' :
         plugin_type => 'ipmi_sensor',
-        options     => [ $ipmi_sensor_telegraf_plugin_options ],
-        notify      => Exec[ 'udevadm4telegraf' ],
+        options     => [$ipmi_sensor_telegraf_plugin_options],
+        notify      => Exec['udevadm4telegraf'],
       }
     }
   }
-
 }
