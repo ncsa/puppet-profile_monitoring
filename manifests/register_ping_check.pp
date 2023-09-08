@@ -6,17 +6,15 @@
 # @example
 #   include profile_monitoring::register_ping_check
 class profile_monitoring::register_ping_check {
-
   # Set exported resource to populate telegraf ping check via ::profile_monitoring::telegraf_ping_check
-  @@file_line { "exported_telegraf_ping_check_${::fqdn}":
+  @@file_line { "exported_telegraf_ping_check_${facts['networking']['fqdn']}":
     ensure   => 'present',
     after    => 'urls',
-    line     => "    \"${::fqdn}\",",
-    match    => $::fqdn,
+    line     => "    \"${facts['networking']['fqdn']}\",",
+    match    => $facts['networking']['fqdn'],
     multiple => 'false',
     notify   => Service['telegraf'],
     path     => '/etc/telegraf/telegraf.d/ping-check.conf',
     tag      => 'telegraf_ping_check',
   }
-
 }

@@ -30,6 +30,9 @@ profile_monitoring::telegraf::config_dirs_default_group: "telegraf"
 profile_monitoring::telegraf::config_dirs_default_mode: "0750"
 profile_monitoring::telegraf::config_dirs_default_owner: "root"
 profile_monitoring::telegraf::enabled: false
+#profile_monitoring::telegraf::gid: ""  # NOT USED
+profile_monitoring::telegraf::group: "telegraf"
+profile_monitoring::telegraf::homedir: "/etc/telegraf"
 profile_monitoring::telegraf::inputs_extra:
   exec:
     mount-state:
@@ -89,6 +92,11 @@ profile_monitoring::telegraf::ipmi_sensor_telegraf_plugin_options:
 #      <<: *telegraf_outputs_influxdb_common
 #      urls:
 #        - "https://ncsa-influxdb.ncsa.illinois.edu:8086"
+
+profile_monitoring::telegraf::uid: "70641"
+profile_monitoring::telegraf::user: "telegraf"
+profile_monitoring::telegraf::user_comment: "NCSA Unified telegraf user"
+
 profile_monitoring::telegraf_ping_check::content: |
   [[inputs.ping]]
     urls = [

@@ -17,11 +17,9 @@ class profile_monitoring::telegraf_ping_check (
   Integer $count,
   String  $interval,
 ) {
-
   include profile_monitoring::telegraf
 
-  if ( $::profile_monitoring::telegraf::enabled )
-  {
+  if ( $profile_monitoring::telegraf::enabled ) {
     file { '/etc/telegraf/telegraf.d/ping-check.conf':
       content => $content,
       group   => 'telegraf',
@@ -54,5 +52,4 @@ class profile_monitoring::telegraf_ping_check (
     # Collect exported resources for telegraf_ping_check
     File_line <<| tag == 'telegraf_ping_check' |>>
   }
-
 }
