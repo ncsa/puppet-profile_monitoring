@@ -13,11 +13,9 @@ class profile_monitoring::telegraf_sslcert_check (
   String $content,
   String $interval,
 ) {
-
   include profile_monitoring::telegraf
 
-  if ( $::profile_monitoring::telegraf::enabled )
-  {
+  if ( $profile_monitoring::telegraf::enabled ) {
     file { '/etc/telegraf/telegraf.d/sslcert-check.conf':
       content => $content,
       group   => 'telegraf',
@@ -40,5 +38,4 @@ class profile_monitoring::telegraf_sslcert_check (
     # Collect exported resources for telegraf_sslcert_check
     File_line <<| tag == 'telegraf_sslcert_check' |>>
   }
-
 }
