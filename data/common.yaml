@@ -111,6 +111,14 @@ profile_monitoring::telegraf_sslcert_check::content: |
     ]
     interval = "3h"
 profile_monitoring::telegraf_sslcert_check::interval: "3h"
+
+profile_monitoring::telegraf_user_resource_usage::enable: false
+profile_monitoring::telegraf_user_resource_usage::telegraf_cfg:
+  command: "/etc/telegraf/scripts/user_resource_usage.sh"
+  data_format: "influx"
+  interval: "5m"
+  timeout: "30s"
+
 profile_monitoring::telegraf_website_check::content: |
   [[inputs.http_response]]
     urls = [
