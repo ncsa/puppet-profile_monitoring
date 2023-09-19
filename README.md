@@ -106,3 +106,8 @@ Include one or more of the following classes in Puppet roles that you want to mo
 
 Note that each of these classes support the dynamic collection of tagged exported 
 resources that can be defined in other classes (e.g. as done in `profile_monitoring::register_ping_check`).
+
+
+### Per User Resource Reporting via Telegraf
+
+Set `profile_monitoring::telegraf_user_resource_usage::enable: true` on nodes where you'd like to collect resource usage (CPU% MEM% MEM_KB PROCESS_COUNT) per user. Note that this reports usage per user per host, so for influxdb performance reasons (cardinality), this is turned off by default. This is mainly intended for headnodes or service nodes with user access.

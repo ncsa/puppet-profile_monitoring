@@ -14,6 +14,7 @@ This class does not depend on telegraf being installed on the node
 * [`profile_monitoring::telegraf`](#profile_monitoringtelegraf): Setup telegraf on a node
 * [`profile_monitoring::telegraf_ping_check`](#profile_monitoringtelegraf_ping_check): Setup telegraf input for ping monitoring of hosts
 * [`profile_monitoring::telegraf_sslcert_check`](#profile_monitoringtelegraf_sslcert_check): Setup telegraf input for monitoring ssl certificates
+* [`profile_monitoring::telegraf_user_resource_usage`](#profile_monitoringtelegraf_user_resource_usage): Report (via telegraf) resource usage per user
 * [`profile_monitoring::telegraf_website_check`](#profile_monitoringtelegraf_website_check): Setup telegraf input for monitoring websites
 
 ## Classes
@@ -66,12 +67,17 @@ The following parameters are available in the `profile_monitoring::telegraf` cla
 * [`config_dirs_default_group`](#config_dirs_default_group)
 * [`config_dirs_default_mode`](#config_dirs_default_mode)
 * [`config_dirs_default_owner`](#config_dirs_default_owner)
+* [`group`](#group)
+* [`homedir`](#homedir)
 * [`inputs_extra`](#inputs_extra)
 * [`inputs_extra_scripts`](#inputs_extra_scripts)
 * [`ipmi_sensor_plugin_enabled`](#ipmi_sensor_plugin_enabled)
 * [`ipmi_sensor_telegraf_plugin_options`](#ipmi_sensor_telegraf_plugin_options)
 * [`outputs`](#outputs)
 * [`required_pkgs`](#required_pkgs)
+* [`uid`](#uid)
+* [`user`](#user)
+* [`user_comment`](#user_comment)
 
 ##### <a name="enabled"></a>`enabled`
 
@@ -102,6 +108,18 @@ String of the telegraf config directories default mode permissions
 Data type: `String`
 
 String of the telegraf config directories default owner permissions
+
+##### <a name="group"></a>`group`
+
+Data type: `String`
+
+String of the group name of the local telegraf user
+
+##### <a name="homedir"></a>`homedir`
+
+Data type: `String`
+
+String of the home directory path of the local telegraf user
 
 ##### <a name="inputs_extra"></a>`inputs_extra`
 
@@ -155,6 +173,24 @@ Hash format is:
 pkg_name: {pkg_options}
 ```
 where `pkg_options` are valid Puppet package attributes.
+
+##### <a name="uid"></a>`uid`
+
+Data type: `String`
+
+String of the UID of the local telegraf user
+
+##### <a name="user"></a>`user`
+
+Data type: `String`
+
+String of the username of the local telegraf user
+
+##### <a name="user_comment"></a>`user_comment`
+
+Data type: `String`
+
+String of the comment in passwd file of the local telegraf user
 
 ### <a name="profile_monitoringtelegraf_ping_check"></a>`profile_monitoring::telegraf_ping_check`
 
@@ -224,6 +260,38 @@ string content of telegraf input file template
 Data type: `String`
 
 string of interval used by telegraf input
+
+### <a name="profile_monitoringtelegraf_user_resource_usage"></a>`profile_monitoring::telegraf_user_resource_usage`
+
+Report (via telegraf) resource usage per user
+
+#### Examples
+
+##### 
+
+```puppet
+include profile_monitoring::telegraf_user_resource_usage
+```
+
+#### Parameters
+
+The following parameters are available in the `profile_monitoring::telegraf_user_resource_usage` class:
+
+* [`enable`](#enable)
+* [`telegraf_cfg`](#telegraf_cfg)
+
+##### <a name="enable"></a>`enable`
+
+Data type: `Boolean`
+
+Turn on/off reporting of resource usage per user
+
+##### <a name="telegraf_cfg"></a>`telegraf_cfg`
+
+Data type: `Hash`
+
+Config that defines the options for the user_resource_usage telegraf plugin
+Hash is passed directly to the telegraf::input class as the $options key
 
 ### <a name="profile_monitoringtelegraf_website_check"></a>`profile_monitoring::telegraf_website_check`
 
