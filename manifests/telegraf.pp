@@ -15,6 +15,11 @@
 # @param config_dirs_default_owner
 #   String of the telegraf config directories default owner permissions
 #
+# @param gid
+#   Optional string of the GID of the local telegraf user
+#   If this is NOT defined then the package install assigns the GID for the 
+#   telegraf user.
+#
 # @param group
 #   String of the group name of the local telegraf user
 #
@@ -74,6 +79,7 @@ class profile_monitoring::telegraf (
   String  $config_dirs_default_group,
   String  $config_dirs_default_mode,
   String  $config_dirs_default_owner,
+  Optional[String] $gid,
   String  $group,
   String  $homedir,
   Hash    $inputs_extra,
@@ -127,11 +133,31 @@ class profile_monitoring::telegraf (
     }
   }
   elsif ( $enabled and $influxdb_database and $influxdb_password and $influxdb_username ) {
-    # SET UNIFIED telegraf UID/GID
-    group { $group:
-      ensure     => 'present',
-      name       => $group,
-      forcelocal => true,
+    # SET telegraf UID/GID
+
+    if ( $gid ) {
+      # SETUP GROUP WITH SPECIFIC GID
+      group { $group:
+        ensure     => 'present',
+        name       => $group,
+        forcelocal => true,
+        gid        => $gid,
+        notify     => [
+          Service['telegraf'],
+          Exec['restart_telegraf_if_id_change'],
+        ],
+      }
+    } else {
+      # SETUP GROUP WITH OS DEFAULT GID
+      group { $group:
+        ensure     => 'present',
+        name       => $group,
+        forcelocal => true,
+        notify     => [
+          Service['telegraf'],
+          Exec['restart_telegraf_if_id_change'],
+        ],
+      }
     }
 
     user { $user:
@@ -144,7 +170,7 @@ class profile_monitoring::telegraf (
       managehome     => false,
       notify         => [
         Service['telegraf'],
-        Exec['restart_telegraf_if_uid_change'],
+        Exec['restart_telegraf_if_id_change'],
       ],
       password       => '!!',
       require        => [
@@ -157,13 +183,17 @@ class profile_monitoring::telegraf (
 
     include telegraf
 
-    exec { 'restart_telegraf_if_uid_change':
+    exec { 'restart_telegraf_if_id_change':
       command   => 'systemctl restart telegraf',
       unless    => "ps aux | grep telegraf | grep -v grep | cut -d\' \' -f1 | grep ${user}",
       path      => ['/usr/bin', '/usr/sbin', '/sbin'],
-      subscribe => User[$user],
+      subscribe => [
+        Group[$group],
+        User[$user],
+      ],
       require   => [
         Service['telegraf'],
+        Group[$group],
         User[$user],
       ],
     }

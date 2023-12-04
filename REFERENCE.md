@@ -7,15 +7,15 @@
 ### Classes
 
 * [`profile_monitoring`](#profile_monitoring): Configure default NCSA monitoring of this host
-* [`profile_monitoring::register_ping_check`](#profile_monitoringregister_ping_check): Register the node for ping monitoring
+* [`profile_monitoring::register_ping_check`](#profile_monitoring--register_ping_check): Register the node for ping monitoring
 Ping checks happen from other nodes via profile_monitoring::telegraf_ping_check
 This class is used to register a given node with external ping checking node(s)
 This class does not depend on telegraf being installed on the node
-* [`profile_monitoring::telegraf`](#profile_monitoringtelegraf): Setup telegraf on a node
-* [`profile_monitoring::telegraf_ping_check`](#profile_monitoringtelegraf_ping_check): Setup telegraf input for ping monitoring of hosts
-* [`profile_monitoring::telegraf_sslcert_check`](#profile_monitoringtelegraf_sslcert_check): Setup telegraf input for monitoring ssl certificates
-* [`profile_monitoring::telegraf_user_resource_usage`](#profile_monitoringtelegraf_user_resource_usage): Report (via telegraf) resource usage per user
-* [`profile_monitoring::telegraf_website_check`](#profile_monitoringtelegraf_website_check): Setup telegraf input for monitoring websites
+* [`profile_monitoring::telegraf`](#profile_monitoring--telegraf): Setup telegraf on a node
+* [`profile_monitoring::telegraf_ping_check`](#profile_monitoring--telegraf_ping_check): Setup telegraf input for ping monitoring of hosts
+* [`profile_monitoring::telegraf_sslcert_check`](#profile_monitoring--telegraf_sslcert_check): Setup telegraf input for monitoring ssl certificates
+* [`profile_monitoring::telegraf_user_resource_usage`](#profile_monitoring--telegraf_user_resource_usage): Report (via telegraf) resource usage per user
+* [`profile_monitoring::telegraf_website_check`](#profile_monitoring--telegraf_website_check): Setup telegraf input for monitoring websites
 
 ## Classes
 
@@ -31,7 +31,7 @@ Configure default NCSA monitoring of this host
 include profile_monitoring
 ```
 
-### <a name="profile_monitoringregister_ping_check"></a>`profile_monitoring::register_ping_check`
+### <a name="profile_monitoring--register_ping_check"></a>`profile_monitoring::register_ping_check`
 
 Register the node for ping monitoring
 Ping checks happen from other nodes via profile_monitoring::telegraf_ping_check
@@ -46,7 +46,7 @@ This class does not depend on telegraf being installed on the node
 include profile_monitoring::register_ping_check
 ```
 
-### <a name="profile_monitoringtelegraf"></a>`profile_monitoring::telegraf`
+### <a name="profile_monitoring--telegraf"></a>`profile_monitoring::telegraf`
 
 Setup telegraf on a node
 
@@ -62,66 +62,75 @@ include profile_monitoring::telegraf
 
 The following parameters are available in the `profile_monitoring::telegraf` class:
 
-* [`enabled`](#enabled)
-* [`config_dirs`](#config_dirs)
-* [`config_dirs_default_group`](#config_dirs_default_group)
-* [`config_dirs_default_mode`](#config_dirs_default_mode)
-* [`config_dirs_default_owner`](#config_dirs_default_owner)
-* [`group`](#group)
-* [`homedir`](#homedir)
-* [`inputs_extra`](#inputs_extra)
-* [`inputs_extra_scripts`](#inputs_extra_scripts)
-* [`ipmi_sensor_plugin_enabled`](#ipmi_sensor_plugin_enabled)
-* [`ipmi_sensor_telegraf_plugin_options`](#ipmi_sensor_telegraf_plugin_options)
-* [`outputs`](#outputs)
-* [`required_pkgs`](#required_pkgs)
-* [`uid`](#uid)
-* [`user`](#user)
-* [`user_comment`](#user_comment)
+* [`enabled`](#-profile_monitoring--telegraf--enabled)
+* [`config_dirs`](#-profile_monitoring--telegraf--config_dirs)
+* [`config_dirs_default_group`](#-profile_monitoring--telegraf--config_dirs_default_group)
+* [`config_dirs_default_mode`](#-profile_monitoring--telegraf--config_dirs_default_mode)
+* [`config_dirs_default_owner`](#-profile_monitoring--telegraf--config_dirs_default_owner)
+* [`gid`](#-profile_monitoring--telegraf--gid)
+* [`group`](#-profile_monitoring--telegraf--group)
+* [`homedir`](#-profile_monitoring--telegraf--homedir)
+* [`inputs_extra`](#-profile_monitoring--telegraf--inputs_extra)
+* [`inputs_extra_scripts`](#-profile_monitoring--telegraf--inputs_extra_scripts)
+* [`ipmi_sensor_plugin_enabled`](#-profile_monitoring--telegraf--ipmi_sensor_plugin_enabled)
+* [`ipmi_sensor_telegraf_plugin_options`](#-profile_monitoring--telegraf--ipmi_sensor_telegraf_plugin_options)
+* [`outputs`](#-profile_monitoring--telegraf--outputs)
+* [`required_pkgs`](#-profile_monitoring--telegraf--required_pkgs)
+* [`uid`](#-profile_monitoring--telegraf--uid)
+* [`user`](#-profile_monitoring--telegraf--user)
+* [`user_comment`](#-profile_monitoring--telegraf--user_comment)
 
-##### <a name="enabled"></a>`enabled`
+##### <a name="-profile_monitoring--telegraf--enabled"></a>`enabled`
 
 Data type: `Boolean`
 
 boolean flag to enable telegraf on the node
 
-##### <a name="config_dirs"></a>`config_dirs`
+##### <a name="-profile_monitoring--telegraf--config_dirs"></a>`config_dirs`
 
 Data type: `Hash`
 
 Hash of file resources for the telegraf config directories
 
-##### <a name="config_dirs_default_group"></a>`config_dirs_default_group`
+##### <a name="-profile_monitoring--telegraf--config_dirs_default_group"></a>`config_dirs_default_group`
 
 Data type: `String`
 
 String of the telegraf config directories default group permissions
 
-##### <a name="config_dirs_default_mode"></a>`config_dirs_default_mode`
+##### <a name="-profile_monitoring--telegraf--config_dirs_default_mode"></a>`config_dirs_default_mode`
 
 Data type: `String`
 
 String of the telegraf config directories default mode permissions
 
-##### <a name="config_dirs_default_owner"></a>`config_dirs_default_owner`
+##### <a name="-profile_monitoring--telegraf--config_dirs_default_owner"></a>`config_dirs_default_owner`
 
 Data type: `String`
 
 String of the telegraf config directories default owner permissions
 
-##### <a name="group"></a>`group`
+##### <a name="-profile_monitoring--telegraf--gid"></a>`gid`
+
+Data type: `String`
+
+Optional string of the GID of the local telegraf user
+If this is NOT defined then the package install assigns the GID for the
+telegraf user.
+
+##### <a name="-profile_monitoring--telegraf--group"></a>`group`
 
 Data type: `String`
 
 String of the group name of the local telegraf user
 
-##### <a name="homedir"></a>`homedir`
+##### <a name="-profile_monitoring--telegraf--homedir"></a>`homedir`
 
 Data type: `String`
 
 String of the home directory path of the local telegraf user
 
-##### <a name="inputs_extra"></a>`inputs_extra`
+##### <a name="-profile_monitoring--telegraf--inputs_extra"></a>`inputs_extra`
 
 Data type: `Hash`
 
@@ -130,7 +139,7 @@ See data/common.yaml for samples
 Inputs defined here are all named, therefore allow parameter merging
 across multiple layers of hiera
 
-##### <a name="inputs_extra_scripts"></a>`inputs_extra_scripts`
+##### <a name="-profile_monitoring--telegraf--inputs_extra_scripts"></a>`inputs_extra_scripts`
 
 Data type: `Hash`
 
@@ -139,7 +148,7 @@ See data/common.yaml for samples
 Files defined here are all named, therefore allow parameter merging
 across multiple layers of hiera
 
-##### <a name="ipmi_sensor_plugin_enabled"></a>`ipmi_sensor_plugin_enabled`
+##### <a name="-profile_monitoring--telegraf--ipmi_sensor_plugin_enabled"></a>`ipmi_sensor_plugin_enabled`
 
 Data type: `Boolean`
 
@@ -147,14 +156,14 @@ Enable or disable the ipmi_sensor telegraf plugin
 A seperate puppet fact is also used to only activate this plugin on nodes that are hardware
 So safe to enable this on virtual hosts too (will just be a noop)
 
-##### <a name="ipmi_sensor_telegraf_plugin_options"></a>`ipmi_sensor_telegraf_plugin_options`
+##### <a name="-profile_monitoring--telegraf--ipmi_sensor_telegraf_plugin_options"></a>`ipmi_sensor_telegraf_plugin_options`
 
 Data type: `Hash`
 
 Config that defines the options for the ipmi_sensor telegraf plugin
 Hash is passed directly to the telegraf::input class as the $options key
 
-##### <a name="outputs"></a>`outputs`
+##### <a name="-profile_monitoring--telegraf--outputs"></a>`outputs`
 
 Data type: `Hash`
 
@@ -163,7 +172,7 @@ See data/common.yaml for samples
 Outputs defined here are all named, therefore allow parameter merging
 across multiple layers of hiera
 
-##### <a name="required_pkgs"></a>`required_pkgs`
+##### <a name="-profile_monitoring--telegraf--required_pkgs"></a>`required_pkgs`
 
 Data type: `Hash`
 
@@ -174,25 +183,25 @@ pkg_name: {pkg_options}
 ```
 where `pkg_options` are valid Puppet package attributes.
 
-##### <a name="uid"></a>`uid`
+##### <a name="-profile_monitoring--telegraf--uid"></a>`uid`
 
 Data type: `String`
 
 String of the UID of the local telegraf user
 
-##### <a name="user"></a>`user`
+##### <a name="-profile_monitoring--telegraf--user"></a>`user`
 
 Data type: `String`
 
 String of the username of the local telegraf user
 
-##### <a name="user_comment"></a>`user_comment`
+##### <a name="-profile_monitoring--telegraf--user_comment"></a>`user_comment`
 
 Data type: `String`
 
 String of the comment in passwd file of the local telegraf user
 
-### <a name="profile_monitoringtelegraf_ping_check"></a>`profile_monitoring::telegraf_ping_check`
+### <a name="profile_monitoring--telegraf_ping_check"></a>`profile_monitoring::telegraf_ping_check`
 
 Setup telegraf input for ping monitoring of hosts
 
@@ -208,29 +217,29 @@ include profile_monitoring::telegraf_ping_check
 
 The following parameters are available in the `profile_monitoring::telegraf_ping_check` class:
 
-* [`content`](#content)
-* [`count`](#count)
-* [`interval`](#interval)
+* [`content`](#-profile_monitoring--telegraf_ping_check--content)
+* [`count`](#-profile_monitoring--telegraf_ping_check--count)
+* [`interval`](#-profile_monitoring--telegraf_ping_check--interval)
 
-##### <a name="content"></a>`content`
+##### <a name="-profile_monitoring--telegraf_ping_check--content"></a>`content`
 
 Data type: `String`
 
 string content of telegraf input file template
 
-##### <a name="count"></a>`count`
+##### <a name="-profile_monitoring--telegraf_ping_check--count"></a>`count`
 
 Data type: `Integer`
 
 integer of count attempts for each ping test
 
-##### <a name="interval"></a>`interval`
+##### <a name="-profile_monitoring--telegraf_ping_check--interval"></a>`interval`
 
 Data type: `String`
 
 string of interval used by telegraf input
 
-### <a name="profile_monitoringtelegraf_sslcert_check"></a>`profile_monitoring::telegraf_sslcert_check`
+### <a name="profile_monitoring--telegraf_sslcert_check"></a>`profile_monitoring::telegraf_sslcert_check`
 
 Setup telegraf input for monitoring ssl certificates
 
@@ -246,22 +255,22 @@ include profile_monitoring::telegraf_sslcert_check
 
 The following parameters are available in the `profile_monitoring::telegraf_sslcert_check` class:
 
-* [`content`](#content)
-* [`interval`](#interval)
+* [`content`](#-profile_monitoring--telegraf_sslcert_check--content)
+* [`interval`](#-profile_monitoring--telegraf_sslcert_check--interval)
 
-##### <a name="content"></a>`content`
+##### <a name="-profile_monitoring--telegraf_sslcert_check--content"></a>`content`
 
 Data type: `String`
 
 string content of telegraf input file template
 
-##### <a name="interval"></a>`interval`
+##### <a name="-profile_monitoring--telegraf_sslcert_check--interval"></a>`interval`
 
 Data type: `String`
 
 string of interval used by telegraf input
 
-### <a name="profile_monitoringtelegraf_user_resource_usage"></a>`profile_monitoring::telegraf_user_resource_usage`
+### <a name="profile_monitoring--telegraf_user_resource_usage"></a>`profile_monitoring::telegraf_user_resource_usage`
 
 Report (via telegraf) resource usage per user
 
@@ -277,23 +286,23 @@ include profile_monitoring::telegraf_user_resource_usage
 
 The following parameters are available in the `profile_monitoring::telegraf_user_resource_usage` class:
 
-* [`enable`](#enable)
-* [`telegraf_cfg`](#telegraf_cfg)
+* [`enable`](#-profile_monitoring--telegraf_user_resource_usage--enable)
+* [`telegraf_cfg`](#-profile_monitoring--telegraf_user_resource_usage--telegraf_cfg)
 
-##### <a name="enable"></a>`enable`
+##### <a name="-profile_monitoring--telegraf_user_resource_usage--enable"></a>`enable`
 
 Data type: `Boolean`
 
 Turn on/off reporting of resource usage per user
 
-##### <a name="telegraf_cfg"></a>`telegraf_cfg`
+##### <a name="-profile_monitoring--telegraf_user_resource_usage--telegraf_cfg"></a>`telegraf_cfg`
 
 Data type: `Hash`
 
 Config that defines the options for the user_resource_usage telegraf plugin
 Hash is passed directly to the telegraf::input class as the $options key
 
-### <a name="profile_monitoringtelegraf_website_check"></a>`profile_monitoring::telegraf_website_check`
+### <a name="profile_monitoring--telegraf_website_check"></a>`profile_monitoring::telegraf_website_check`
 
 Setup telegraf input for monitoring websites
 
@@ -309,16 +318,16 @@ include profile_monitoring::telegraf_website_check
 
 The following parameters are available in the `profile_monitoring::telegraf_website_check` class:
 
-* [`content`](#content)
-* [`interval`](#interval)
+* [`content`](#-profile_monitoring--telegraf_website_check--content)
+* [`interval`](#-profile_monitoring--telegraf_website_check--interval)
 
-##### <a name="content"></a>`content`
+##### <a name="-profile_monitoring--telegraf_website_check--content"></a>`content`
 
 Data type: `String`
 
 string content of telegraf input file template
 
-##### <a name="interval"></a>`interval`
+##### <a name="-profile_monitoring--telegraf_website_check--interval"></a>`interval`
 
 Data type: `String`
 
