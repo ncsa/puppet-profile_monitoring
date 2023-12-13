@@ -48,7 +48,12 @@ profile_monitoring::telegraf::inputs_extra_scripts:
   "/etc/telegraf/scripts/mount-state.sh":
     content: |
       #!/bin/bash
-      KNOWN_RO_MOUNTS=("/sys/fs/cgroup")
+      KNOWN_RO_MOUNTS=("/sys/fs/cgroup" \
+      "/run/credentials/systemd-sysctl.service" \
+      "/run/credentials/systemd-tmpfiles-setup-dev.service" \
+      "/run/credentials/systemd-tmpfiles-setup.service" \
+      "/run/credentials" \
+      "/run/systemd/incoming")
       #KNOWN_RO_MOUNTS=("/sys/fs/cgroup" "/path/2" "/path/3") # Syntax for >1 paths (can delimit w/ newline too)
       ro_mounts=$(findmnt -O ro -n --list -t noiso9660)
       host=$(hostname -f)
@@ -61,7 +66,7 @@ profile_monitoring::telegraf::inputs_extra_scripts:
         #echo "Target=$target:Source=$src:fstype=$fstype:Options=$options"
         if [[ -z "$target" || -z "$src" || -z "$fstype" || -z "$options" ]]; then
           #echo "Something not defined, generate an alert"
-          echo "mount-state,nodeName=$host,mount=ERRORPLACEHOLDER,src=ERRORPLACEHOLDER mountState=1"
+          echo "mount-state,nodeName=$host,mount=ERRORPLACEHOLDER,source=ERRORPLACEHOLDER mountState=1"
           continue
         fi
         # Ignore filesystems known to be ro
