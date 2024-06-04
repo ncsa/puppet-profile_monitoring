@@ -1,0 +1,3 @@
+---
+profile_monitoring::telegraf::required_pkgs:
+  ipmitool:

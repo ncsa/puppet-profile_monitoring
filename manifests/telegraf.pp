@@ -239,8 +239,20 @@ class profile_monitoring::telegraf (
     }
 
     # Place udev rule for ipmi commands on nodes running telegraf
+    case $facts['os']['family'] {
+      'RedHat': {
+        $udev_rules_path = '/lib/udev/rules.d'
+      }
+      'Suse': {
+        $udev_rules_path = '/usr/lib/udev/rules.d'
+      }
+      default: {
+        fail('Only RedHat and Suse OS families are supported at this time')
+      }
+    }
+
     $udevrules_ipmi = 'KERNEL=="ipmi*", MODE="660", GROUP="telegraf"'
-    file { '/lib/udev/rules.d/52-telegraf-ipmi.rules':
+    file { "${udev_rules_path}/52-telegraf-ipmi.rules":
       ensure  => 'file',
       mode    => '0640',
       content => $udevrules_ipmi,
