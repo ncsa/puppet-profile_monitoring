@@ -112,7 +112,7 @@ String of the telegraf config directories default owner permissions
 
 ##### <a name="-profile_monitoring--telegraf--gid"></a>`gid`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 Optional string of the GID of the local telegraf user
 If this is NOT defined then the package install assigns the GID for the
