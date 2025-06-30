@@ -46,6 +46,35 @@ This class does not depend on telegraf being installed on the node
 include profile_monitoring::register_ping_check
 ```
 
+#### Parameters
+
+The following parameters are available in the `profile_monitoring::register_ping_check` class:
+
+* [`domain_name`](#-profile_monitoring--register_ping_check--domain_name)
+* [`hostname_prefix`](#-profile_monitoring--register_ping_check--hostname_prefix)
+* [`hostname_suffix`](#-profile_monitoring--register_ping_check--hostname_suffix)
+
+##### <a name="-profile_monitoring--register_ping_check--domain_name"></a>`domain_name`
+
+Data type: `String`
+
+Optionally override the domain name portion of the hostname that was
+automatically pulled in via facter.
+
+##### <a name="-profile_monitoring--register_ping_check--hostname_prefix"></a>`hostname_prefix`
+
+Data type: `String`
+
+Optionally prepend a prefix onto the hostname that was automatically pulled
+in via facter.
+
+##### <a name="-profile_monitoring--register_ping_check--hostname_suffix"></a>`hostname_suffix`
+
+Data type: `String`
+
+Optionally append a suffix onto the hostname that was automatically pulled
+in via facter.
+
 ### <a name="profile_monitoring--telegraf"></a>`profile_monitoring::telegraf`
 
 Setup telegraf on a node

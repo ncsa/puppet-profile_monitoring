@@ -23,6 +23,11 @@ lookup_options:
 #    password: "PASSWORD"
 #    insecure_skip_verify: false
 #    skip_database_creation: true
+
+profile_monitoring::register_ping_check::domain_name: ""
+profile_monitoring::register_ping_check::hostname_prefix: ""
+profile_monitoring::register_ping_check::hostname_suffix: ""
+
 profile_monitoring::telegraf::config_dirs:
   "/etc/telegraf": {}
   "/etc/telegraf/scripts": {}
@@ -79,13 +84,11 @@ profile_monitoring::telegraf::inputs_extra_scripts:
       done <<< "$ro_mounts"
   "/etc/telegraf/scripts/ncsa_inventory.sh":
     source: "puppet:///modules/profile_monitoring/misc/ncsa_inventory.sh"
-
 profile_monitoring::telegraf::ipmi_sensor_plugin_enabled: true
 profile_monitoring::telegraf::ipmi_sensor_telegraf_plugin_options:
   path: "/usr/bin/ipmitool"
   interval: "60s"
   timeout: "10s"
-
 #profile_monitoring::telegraf::outputs:
 #  influxdb:
 #    npcf-influxdb-collector:
@@ -96,7 +99,6 @@ profile_monitoring::telegraf::ipmi_sensor_telegraf_plugin_options:
 #      <<: *telegraf_outputs_influxdb_common
 #      urls:
 #        - "https://ncsa-influxdb.ncsa.illinois.edu:8086"
-
 profile_monitoring::telegraf::gid: null
 profile_monitoring::telegraf::uid: "70641"
 profile_monitoring::telegraf::user: "telegraf"
@@ -110,6 +112,7 @@ profile_monitoring::telegraf_ping_check::content: |
     interval = "1m"
 profile_monitoring::telegraf_ping_check::count: 5
 profile_monitoring::telegraf_ping_check::interval: "2m"
+
 profile_monitoring::telegraf_sslcert_check::content: |
   [[inputs.x509_cert]]
     sources = [
