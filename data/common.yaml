@@ -60,7 +60,7 @@ profile_monitoring::telegraf::inputs_extra_scripts:
       "/run/credentials" \
       "/run/systemd/incoming")
       #KNOWN_RO_MOUNTS=("/sys/fs/cgroup" "/path/2" "/path/3") # Syntax for >1 paths (can delimit w/ newline too)
-      ro_mounts=$(findmnt -O ro -n --list -t noiso9660)
+      ro_mounts=$(findmnt -O ro -n --list -t noiso9660,noramfs,nosquashfs)
       host=$(hostname -f)
       if [ -z "$ro_mounts" ]; then
         exit 0
