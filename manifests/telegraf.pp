@@ -60,7 +60,7 @@
 #   pkg_name: {pkg_options}
 #   ```
 #   where `pkg_options` are valid Puppet package attributes.
-#   
+#
 # @param uid
 #   String of the UID of the local telegraf user
 #
