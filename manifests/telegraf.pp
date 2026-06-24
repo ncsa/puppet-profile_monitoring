@@ -228,6 +228,14 @@ class profile_monitoring::telegraf (
     # Ensure the resources
     ensure_resources( 'file', $inputs_extra_scripts, $inputs_extra_scripts_defaults )
 
+    # SVCPLAN-9262: Cleanup retired ncsa_inventory conf & script (ignore when migrating to ansible)
+    file { '/etc/telegraf/scripts/ncsa_inventory.sh':
+      ensure => absent,
+    }
+    file { '/etc/telegraf/telegraf.d/ncsa_inventory.conf':
+      ensure => absent,
+    }
+
     # Install outputs
     $outputs.each | $plugin_type, $entry | {
       $entry.each | $entry_name, $options | {
